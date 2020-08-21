@@ -606,6 +606,9 @@ class SettingsController extends Controller
         $setting->alert_threshold = $request->input('alert_threshold');
         $setting->audit_interval = $request->input('audit_interval');
         $setting->audit_warning_days = $request->input('audit_warning_days');
+        $setting->audit_warning_days_1 = $request->input('audit_warning_days_1');
+        $setting->audit_warning_days_2 = $request->input('audit_warning_days_2');
+        $setting->audit_warning_days_3 = $request->input('audit_warning_days_3');
         $setting->show_alerts_in_menu = $request->input('show_alerts_in_menu', '0');
 
         if ($setting->save()) {

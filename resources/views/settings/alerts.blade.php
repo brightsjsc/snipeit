@@ -151,7 +151,45 @@
                                 <p class="help-block">{{ trans('admin/settings/general.audit_warning_days_help') }}</p>
                             </div>
                         </div>
-
+                        <div class="form-group {{ $errors->has('audit_warning_days_1') ? 'error' : '' }}">
+                            <div class="col-md-3">
+                                {{ Form::label("Báo tài sản sắp hết hạn bảo hành") }}
+                            </div>
+                            <div class="input-group col-md-2">
+                                {{ Form::text('audit_warning_days_1', Input::old('audit_warning_days_1', $setting->audit_warning_days_1), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            </div>
+                            <div class="col-md-9 col-md-offset-3">
+                                {!! $errors->first('audit_warning_days_1', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                <p class="help-block">Cảnh báo bạn trước bao nhiêu ngày khi tài sản hết bảo hành</p>
+                            </div>
+                        </div>
+                        <div class="form-group {{ $errors->has('audit_warning_days_2') ? 'error' : '' }}">
+                            <div class="col-md-3">
+                                {{ Form::label("Báo tài sản sắp hết khấu hao") }}
+                            </div>
+                            <div class="input-group col-md-2">
+                                {{ Form::text('audit_warning_days_2', Input::old('audit_warning_days_2', $setting->audit_warning_days_2), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            </div>
+                            <div class="col-md-9 col-md-offset-3">
+                                {!! $errors->first('audit_warning_days_2', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                <p class="help-block">Cảnh báo bạn trước bao nhiêu ngày khi tài sản hết khấu hao</p>
+                            </div>
+                        </div>
+                        <div class="form-group {{ $errors->has('audit_warning_days_3') ? 'error' : '' }}">
+                            <div class="col-md-3">
+                                {{ Form::label("Báo tài sản sắp hết hạn bản quyền") }}
+                            </div>
+                            <div class="input-group col-md-2">
+                                {{ Form::text('audit_warning_days_3', Input::old('audit_warning_days_3', $setting->audit_warning_days_3), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            </div>
+                            <div class="col-md-9 col-md-offset-3">
+                                {!! $errors->first('audit_warning_days_3', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                <p class="help-block">Cảnh báo bạn trước bao nhiêu ngày khi tài sản hết hạn bản quyền</p>
+                            </div>
+                        </div>
                     </div>
 
                 </div> <!--/.box-body-->
