@@ -31,7 +31,14 @@
             <span class="hidden-xs hidden-sm">{{ trans('general.assets') }}</span>
           </a>
         </li>
-
+        <li>
+          <a href="#components" data-toggle="tab">
+            <span class="hidden-lg hidden-md">
+            <i class="fa fa-barcode" aria-hidden="true"></i>
+            </span>
+            <span class="hidden-xs hidden-sm">Các thành phần</span>
+          </a>
+        </li>
         <li>
           <a href="#licenses" data-toggle="tab">
             <span class="hidden-lg hidden-md">
@@ -372,7 +379,33 @@
             </table>
           </div>
         </div><!-- /asset -->
-
+        <div class="tab-pane" id="components">
+          <!-- checked out components table -->
+          <div class="table-responsive">
+            <table class="display table table-striped">
+              <thead>
+                <tr>
+                  <th class="col-md-5">Tên</th>
+                  <th class="col-md-1 hidden-print">Tác vụ</th>
+                </tr>
+              </thead>
+              <tbody>
+              @if ($components)
+                @foreach ($components as $comp)
+                <tr>
+                  <td>
+                      <a href="{{ route('checkin/component', $comp->id) }}">{{ $comp->name }}</a>
+                  </td>
+                  <td class="hidden-print">
+                    <a href="{{ route('checkout/component', $comp->id)  }}" class="btn btn-primary btn-sm hidden-print">{{ trans('general.checkin') }}</a>
+                  </td>
+                </tr>
+                @endforeach
+                @endif
+              </tbody>
+            </table>
+          </div>
+        </div>
         <div class="tab-pane" id="licenses">
           <div class="table-responsive">
             <table class="display table table-hover">

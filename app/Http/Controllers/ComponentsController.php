@@ -196,8 +196,10 @@ class ComponentsController extends Controller
         $component = Component::find($componentId);
 
         if (isset($component->id)) {
+            $query="SELECT * FROM action_logs WHERE action_type='uploaded' AND item_type LIKE '%Component%' AND item_id ='$component->id' AND deleted_at IS NULL";
+            $file_upload = DB::select(DB::raw($query));
             $this->authorize('view', $component);
-            return view('components/view', compact('component'));
+            return view('components/view', compact('component','file_upload'));
         }
 
         return redirect()->route('components.index')->with('error', trans('admin/components/message.does_not_exist'));

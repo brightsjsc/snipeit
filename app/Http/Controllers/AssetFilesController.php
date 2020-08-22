@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Requests\AssetFileRequest;
 use App\Models\Actionlog;
 use App\Models\Asset;
+use App\Models\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -29,7 +30,6 @@ class AssetFilesController extends Controller
         $this->authorize('update', $asset);
 
         $destinationPath = config('app.private_uploads').'/assets';
-
         if ($request->hasFile('file')) {
             foreach ($request->file('file') as $file) {
                 $extension = $file->getClientOriginalExtension();
@@ -37,6 +37,29 @@ class AssetFilesController extends Controller
                 $filename .= '-'.str_slug(basename($file->getClientOriginalName(), '.'.$extension)).'.'.$extension;
                 $file->move($destinationPath, $filename);
                 $asset->logUpload($filename, e($request->get('notes')));
+            }
+            return redirect()->back()->with('success', trans('admin/hardware/message.upload.success'));
+        }
+
+        return redirect()->back()->with('error', trans('admin/hardware/message.upload.nofiles'));
+    }
+    public function storeComponent(AssetFileRequest $request, $componentId = null)
+    {
+        if (!$component = Component::find($componentId)) {
+            return redirect()->route('components.index')->with('error', trans('admin/components/message.not_found'));
+        }
+
+        $this->authorize('update', $component);
+
+        $destinationPath = config('app.private_uploads').'/components';
+
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                $extension = $file->getClientOriginalExtension();
+                $filename = 'component-'.$component->id.'-'.str_random(8);
+                $filename .= '-'.str_slug(basename($file->getClientOriginalName(), '.'.$extension)).'.'.$extension;
+                $file->move($destinationPath, $filename);
+                $component->logUpload($filename, e($request->get('notes')));
             }
             return redirect()->back()->with('success', trans('admin/hardware/message.upload.success'));
         }
@@ -90,7 +113,43 @@ class AssetFilesController extends Controller
         // Redirect to the hardware management page
         return redirect()->route('hardware.index')->with('error', $error);
     }
+    public function showComponent($componentId = null, $fileId = null, $download = true)
+    {
+        $component = Component::find($componentId);
+        // the asset is valid
+        if (isset($component->id)) {
+            $this->authorize('view', $component);
 
+            if (!$log = Actionlog::find($fileId)) {
+                return response('No matching record for that asset/file', 500)
+                    ->header('Content-Type', 'text/plain');
+            }
+
+            $file = $log->get_src('components');
+
+            if ($log->action_type =='audit') {
+                $file = $log->get_src('audits');
+            }
+
+            if (!file_exists($file)) {
+                return response('File '.$file.' not found on server', 404)
+                    ->header('Content-Type', 'text/plain');
+            }
+
+            if ($download != 'true') {
+                  if ($contents = file_get_contents($file)) {
+                      return Response::make($contents)->header('Content-Type', mime_content_type($file));
+                  }
+                return JsonResponse::create(["error" => "Failed validation: "], 500);
+            }
+            return Response::download($file);
+        }
+        // Prepare the error message
+        $error = trans('admin/component/message.does_not_exist', ['id' => $fileId]);
+
+        // Redirect to the hardware management page
+        return redirect()->route('component.index')->with('error', $error);
+    }
     /**
     * Delete the associated file
     *
@@ -100,6 +159,32 @@ class AssetFilesController extends Controller
     * @since [v1.0]
     * @return View
     */
+    public function destroyComponent($componentId = null, $fileId = null)
+    {
+        $component = Component::find($componentId);
+        $this->authorize('update', $component);
+        $destinationPath = config('app.private_uploads').'/imports/components';
+       
+        // the asset is valid
+        if (isset($component->id)) {
+            $this->authorize('update', $component);
+           
+            $log = Actionlog::find($fileId);
+            if ($log) {
+                $full_filename = $destinationPath.'/'.$log->filename;
+                if (file_exists($full_filename)) {
+                    unlink($destinationPath.'/'.$log->filename);
+                }
+                $log->delete();
+                return redirect()->back()->with('success', trans('admin/hardware/message.deletefile.success'));
+            }
+            return redirect()->back()->with('error', 'Could not find matching upload log.');
+
+        }
+
+        // Redirect to the hardware management page
+        return redirect()->route('hardware.index')->with('error', trans('admin/hardware/message.does_not_exist'));
+    }
     public function destroy($assetId = null, $fileId = null)
     {
         $asset = Asset::find($assetId);

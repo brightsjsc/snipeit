@@ -114,15 +114,26 @@ Route::group(
             'as' => 'upload/asset',
             'uses' => 'AssetFilesController@store'
         ]);
-
+        Route::post('{componentId}/component', [
+            'as' => 'upload/component',
+            'uses' => 'AssetFilesController@storeComponent'
+        ]);
         Route::get('{assetId}/showfile/{fileId}/{download?}', [
             'as' => 'show/assetfile',
             'uses' => 'AssetFilesController@show'
+        ]);
+        Route::get('{componentId}/showfilecomponent/{fileId}/{download?}', [
+            'as' => 'show/componentfile',
+            'uses' => 'AssetFilesController@showComponent'
         ]);
 
         Route::delete('{assetId}/showfile/{fileId}/delete', [
             'as' => 'delete/assetfile',
             'uses' => 'AssetFilesController@destroy'
+        ]);
+        Route::delete('{componentId}/showfile/{fileId}/deleteComponent', [
+            'as' => 'delete/componentfile',
+            'uses' => 'AssetFilesController@destroyComponent'
         ]);
 
 

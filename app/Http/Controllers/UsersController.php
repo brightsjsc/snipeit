@@ -615,10 +615,12 @@ class UsersController extends Controller
         }
 
         $userlog = $user->userlog->load('item');
+        $query="SELECT * FROM components WHERE user_id=$userId AND deleted_at IS NULL";
+        $components = DB::select(DB::raw($query));
 
         if (isset($user->id)) {
             $this->authorize('view', $user);
-            return view('users/view', compact('user', 'userlog'));
+            return view('users/view', compact('user', 'userlog','components'));
         }
     }
 
