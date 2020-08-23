@@ -609,6 +609,12 @@ class SettingsController extends Controller
         $setting->audit_warning_days_1 = $request->input('audit_warning_days_1');
         $setting->audit_warning_days_2 = $request->input('audit_warning_days_2');
         $setting->audit_warning_days_3 = $request->input('audit_warning_days_3');
+        $setting->audit_warning_days_1_email = $request->input('audit_warning_days_1_email');
+        $setting->audit_warning_days_2_email = $request->input('audit_warning_days_2_email');
+        $setting->audit_warning_days_3_email = $request->input('audit_warning_days_3_email');
+        $setting->audit_warning_days_1_notification = $request->input('audit_warning_days_1_notification');
+        $setting->audit_warning_days_2_notification = $request->input('audit_warning_days_2_notification');
+        $setting->audit_warning_days_3_notification = $request->input('audit_warning_days_3_notification');
         $setting->show_alerts_in_menu = $request->input('show_alerts_in_menu', '0');
 
         if ($setting->save()) {

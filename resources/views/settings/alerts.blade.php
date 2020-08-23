@@ -155,9 +155,19 @@
                             <div class="col-md-3">
                                 {{ Form::label("Báo tài sản sắp hết hạn bảo hành") }}
                             </div>
-                            <div class="input-group col-md-2">
-                                {{ Form::text('audit_warning_days_1', Input::old('audit_warning_days_1', $setting->audit_warning_days_1), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
-                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            <div class="col-md-9">
+                                <div class="input-group" style="width:100px;float:left">
+                                    {{ Form::text('audit_warning_days_1', Input::old('audit_warning_days_1', $setting->audit_warning_days_1), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                    <span class="input-group-addon">{{ trans('general.days') }}</span>
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                    {{ Form::checkbox('audit_warning_days_1_email', '1', Input::old('audit_warning_days_1_email', $setting->audit_warning_days_1_email),array('class' => 'minimal')) }}
+                                    Email
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                    {{ Form::checkbox('audit_warning_days_1_notification', '1', Input::old('audit_warning_days_1_notification', $setting->audit_warning_days_1_notification),array('class' => 'minimal')) }}
+                                    Notification
+                                </div>
                             </div>
                             <div class="col-md-9 col-md-offset-3">
                                 {!! $errors->first('audit_warning_days_1', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
@@ -168,9 +178,19 @@
                             <div class="col-md-3">
                                 {{ Form::label("Báo tài sản sắp hết khấu hao") }}
                             </div>
-                            <div class="input-group col-md-2">
-                                {{ Form::text('audit_warning_days_2', Input::old('audit_warning_days_2', $setting->audit_warning_days_2), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
-                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            <div class="col-md-9">
+                                <div class="input-group" style="width:100px;float:left">
+                                    {{ Form::text('audit_warning_days_2', Input::old('audit_warning_days_2', $setting->audit_warning_days_2), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                    <span class="input-group-addon">{{ trans('general.days') }}</span>
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                    {{ Form::checkbox('audit_warning_days_2_email', '1', Input::old('audit_warning_days_2_email', $setting->audit_warning_days_2_email),array('class' => 'minimal')) }}
+                                    Email
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                    {{ Form::checkbox('audit_warning_days_2_notification', '1', Input::old('audit_warning_days_2_notification', $setting->audit_warning_days_2_notification),array('class' => 'minimal')) }}
+                                    Notification
+                                </div>
                             </div>
                             <div class="col-md-9 col-md-offset-3">
                                 {!! $errors->first('audit_warning_days_2', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
@@ -181,9 +201,19 @@
                             <div class="col-md-3">
                                 {{ Form::label("Báo tài sản sắp hết hạn bản quyền") }}
                             </div>
-                            <div class="input-group col-md-2">
-                                {{ Form::text('audit_warning_days_3', Input::old('audit_warning_days_3', $setting->audit_warning_days_3), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
-                                <span class="input-group-addon">{{ trans('general.days') }}</span>
+                            <div class="col-md-9">
+                                <div class="input-group" style="width:100px;float:left">
+                                    {{ Form::text('audit_warning_days_3', Input::old('audit_warning_days_3', $setting->audit_warning_days_3), array('class' => 'form-control','placeholder' => '14', 'maxlength'=>'3', 'style'=>'width: 60px;')) }}
+                                    <span class="input-group-addon">{{ trans('general.days') }}</span>
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                {{ Form::checkbox('audit_warning_days_3_email', '1', Input::old('audit_warning_days_3_email', $setting->audit_warning_days_3_email),array('class' => 'minimal')) }}
+                                Email
+                                </div>
+                                <div class="input-group" style="width:100px;float:left;text-align: center;">
+                                {{ Form::checkbox('audit_warning_days_3_notification', '1', Input::old('audit_warning_days_3_notification', $setting->audit_warning_days_3_notification),array('class' => 'minimal')) }}
+                                Notification
+                                </div>
                             </div>
                             <div class="col-md-9 col-md-offset-3">
                                 {!! $errors->first('audit_warning_days_3', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
