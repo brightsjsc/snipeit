@@ -53,7 +53,7 @@ class SendEmailNotification extends Command
             WHERE u.activated=1 AND s.audit_warning_days_1_email=1";
         $users = DB::select(DB::raw($query));
         foreach($users AS $user){
-            $arr_item = Helper::checkNotification(1,$user->id);
+            $arr_item = Helper::checkNotification(1,$user->id,0);
             if(count($arr_item)){
                 $subject = "Thông báo tài sản sắp hết hạn bảo hành";
                 $body = "<p>Bạn có ".count($arr_item)." tài sản sắp hết hạn bảo hành</p>";
@@ -77,7 +77,7 @@ class SendEmailNotification extends Command
             WHERE u.activated=1 AND s.audit_warning_days_2_email=1";
         $users = DB::select(DB::raw($query));
         foreach($users AS $user){
-            $arr_item = Helper::checkNotification(2,$user->id);
+            $arr_item = Helper::checkNotification(2,$user->id,0);
             if(count($arr_item)){
                 $subject = "Thông báo tài sản sắp hết khấu hao";
                 $body = "<p>Bạn có ".count($arr_item)." tài sản sắp hết khấu hao</p>";
@@ -101,7 +101,7 @@ class SendEmailNotification extends Command
             WHERE u.activated=1 AND s.audit_warning_days_3_email=1";
         $users = DB::select(DB::raw($query));
         foreach($users AS $user){
-            $arr_item = Helper::checkNotification(3,$user->id);
+            $arr_item = Helper::checkNotification(3,$user->id,0);
             if(count($arr_item)){
                 $subject = "Thông báo phần mềm sắp hết hạn bản quyền";
                 $body = "<p>Bạn có ".count($arr_item)." phần mềm sắp hết hạn bản quyền</p>";

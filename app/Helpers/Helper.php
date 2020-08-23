@@ -355,7 +355,7 @@ class Helper
 
 
     }
-    public static function checkNotification($type,$user_id = NULL)
+    public static function checkNotification($type,$user_id = NULL,$notification=1)
     {
         $items_array = array();
         $all_count = 0;
@@ -366,13 +366,14 @@ class Helper
         if($type==1){
             //Hết hạn bảo hành
             if(\App\Models\Setting::getSettings()->audit_warning_days_1_notification==1){
+                $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=1 AND data_id=a.id)=0";
                 $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ) AS `date`,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),a.purchase_date) AS qty,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),CURRENT_DATE) AS remaining
                 FROM assets AS a WHERE a.user_id=$user_id AND a.purchase_date IS NOT NULL
                     AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_1." DAY)
                     AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) >= CURRENT_DATE
-                    AND (SELECT count(id) FROM log_send_mail WHERE type=1 AND data_id=a.id)=0";
+                    $cond ";
                 $assets = DB::select(DB::raw($query));
                 foreach($assets AS $asset){
                     $percent = $asset->qty ? number_format(((($asset->qty -$asset->remaining)/ $asset->qty) * 100), 0) : 0;
@@ -389,6 +390,7 @@ class Helper
         }elseif($type==2){
             //Hết khấu hao
             if(\App\Models\Setting::getSettings()->audit_warning_days_2_notification==1){
+                $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=2 AND data_id=a.id)=0";
                 $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ) AS `date`,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ),CURRENT_DATE) AS remaining
                 FROM assets AS a 
@@ -397,7 +399,7 @@ class Helper
                 WHERE d.months IS NOT NULL
                 AND DATE_ADD(a.purchase_date, INTERVAL d.months MONTH) <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_2." DAY)
                     AND DATE_ADD(a.purchase_date, INTERVAL d.months MONTH) >= CURRENT_DATE
-                    AND (SELECT count(id) FROM log_send_mail WHERE type=2 AND data_id=a.id)=0";
+                    $cond ";
                 $assets = DB::select(DB::raw($query));
                 foreach($assets AS $asset){
                     $items_array[$all_count]['id'] = $asset->id;
@@ -413,11 +415,12 @@ class Helper
         }elseif($type==3){
             //Hết hạn bản quyền
             if(\App\Models\Setting::getSettings()->audit_warning_days_3_notification==1){
+                $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=3 AND data_id=l.id)=0";
                 $query="SELECT l.id ,l.name, l.expiration_date AS `date`,
                     DATEDIFF(l.expiration_date,CURRENT_DATE) AS remaining
                 FROM licenses AS l WHERE l.user_id=$user_id AND l.expiration_date IS NOT NULL
                     AND l.expiration_date <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_3." DAY)
-                    AND (SELECT count(id) FROM log_send_mail WHERE type=3 AND data_id=l.id)=0";
+                    $cond ";
                 $licenses = DB::select(DB::raw($query));
                 foreach($licenses AS $license){
                     $items_array[$all_count]['id'] = $license->id;
