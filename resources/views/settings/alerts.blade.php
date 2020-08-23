@@ -199,7 +199,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('audit_warning_days_3') ? 'error' : '' }}">
                             <div class="col-md-3">
-                                {{ Form::label("Báo tài sản sắp hết hạn bản quyền") }}
+                                {{ Form::label("Báo phần mềm sắp hết hạn bản quyền") }}
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group" style="width:100px;float:left">
@@ -217,7 +217,7 @@
                             </div>
                             <div class="col-md-9 col-md-offset-3">
                                 {!! $errors->first('audit_warning_days_3', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
-                                <p class="help-block">Cảnh báo bạn trước bao nhiêu ngày khi tài sản hết hạn bản quyền</p>
+                                <p class="help-block">Cảnh báo bạn trước bao nhiêu ngày khi phần mềm hết hạn bản quyền</p>
                             </div>
                         </div>
                     </div>

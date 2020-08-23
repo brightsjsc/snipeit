@@ -56,7 +56,6 @@ class Mail
                 $mail->Subject = $subject;
                 $mail->Body    = $body;
                 $result=$mail->send();
-                var_dump($result);die();
             }catch (Exception $exception){
             }
         }

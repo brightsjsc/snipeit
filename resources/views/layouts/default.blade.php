@@ -260,19 +260,22 @@
                @can('admin')
                @if ($snipeSettings->show_alerts_in_menu=='1')
                <!-- Tasks: style can be found in dropdown.less -->
-               <?php $alert_items = \App\Helpers\Helper::checkLowInventory(); ?>
+               <?php $alert_items = \App\Helpers\Helper::checkLowInventory();
+               $alert_items_1 = \App\Helpers\Helper::checkNotification(1);
+               $alert_items_2 = \App\Helpers\Helper::checkNotification(2);
+               $alert_items_3 = \App\Helpers\Helper::checkNotification(3); ?>
 
                <li class="dropdown tasks-menu">
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                    <i class="fa fa-flag-o" aria-hidden="true"></i>
                      <span class="sr-only">Alerts</span>
-                   @if (count($alert_items))
-                    <span class="label label-danger">{{ count($alert_items) }}</span>
+                   @if (count($alert_items) ||count($alert_items_1) ||count($alert_items_2)||count($alert_items_3))
+                    <span class="label label-danger">{{ count($alert_items) +count($alert_items_1) +count($alert_items_2)+count($alert_items_3) }}</span>
                    @endif
                  </a>
                  <ul class="dropdown-menu">
                    <li class="header">You have {{ count($alert_items) }} items below or almost below minimum quantity levels</li>
-                   <li>
+                   <li class="tmp_fix">
                      <!-- inner menu: contains the actual data -->
                      <ul class="menu">
 
@@ -280,14 +283,89 @@
 
                         <li><!-- Task item -->
                           <a href="{{route($alert_items[$i]['type'].'.show', $alert_items[$i]['id'])}}">
-                            <h2>{{ $alert_items[$i]['name'] }}
+                            <h3>{{ $alert_items[$i]['name'] }}
                               <small class="pull-right">
                                 {{ $alert_items[$i]['remaining'] }} remaining
                               </small>
-                            </h2>
+                            </h3>
                             <div class="progress xs">
                               <div class="progress-bar progress-bar-yellow" style="width: {{ $alert_items[$i]['percent'] }}%" role="progressbar" aria-valuenow="{{ $alert_items[$i]['percent'] }}" aria-valuemin="0" aria-valuemax="100">
                                 <span class="sr-only">{{ $alert_items[$i]['percent'] }}% Complete</span>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                        <!-- end task item -->
+                      @endfor
+                     </ul>
+                   </li>
+                   <li class="header">Bạn có {{ count($alert_items_1) }} tài sản sắp hết hạn bảo hành</li>
+                   <li class="tmp_fix">
+                     <!-- inner menu: contains the actual data -->
+                     <ul class="menu">
+
+                      @for($i = 0; count($alert_items_1) > $i; $i++)
+
+                        <li><!-- Task item -->
+                          <a href="{{route($alert_items_1[$i]['type'].'.show', $alert_items_1[$i]['id'])}}">
+                            <h3>{{ $alert_items_1[$i]['name'] }}
+                              <small class="pull-right">
+                                {{ $alert_items_1[$i]['remaining'] }} ngày
+                              </small>
+                            </h3>
+                            <div class="progress xs">
+                              <div class="progress-bar progress-bar-yellow" style="width: {{ $alert_items_1[$i]['percent'] }}%" role="progressbar" aria-valuenow="{{ $alert_items_1[$i]['percent'] }}" aria-valuemin="0" aria-valuemax="100">
+                                <span class="sr-only">{{ $alert_items_1[$i]['percent'] }}% Complete</span>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                        <!-- end task item -->
+                      @endfor
+                     </ul>
+                   </li>
+                   <li class="header">Bạn có {{ count($alert_items_2) }} tài sản sắp hết khấu hao</li>
+                   <li class="tmp_fix">
+                     <!-- inner menu: contains the actual data -->
+                     <ul class="menu">
+
+                      @for($i = 0; count($alert_items_2) > $i; $i++)
+
+                        <li><!-- Task item -->
+                          <a href="{{route($alert_items_2[$i]['type'].'.show', $alert_items_2[$i]['id'])}}">
+                            <h3>{{ $alert_items_2[$i]['name'] }}
+                              <small class="pull-right">
+                                {{ $alert_items_2[$i]['remaining'] }} ngày
+                              </small>
+                            </h3>
+                            <div class="progress xs">
+                              <div class="progress-bar progress-bar-yellow" style="width: {{ $alert_items_2[$i]['percent'] }}%" role="progressbar" aria-valuenow="{{ $alert_items_2[$i]['percent'] }}" aria-valuemin="0" aria-valuemax="100">
+                                <span class="sr-only">{{ $alert_items_2[$i]['percent'] }}% Complete</span>
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                        <!-- end task item -->
+                      @endfor
+                     </ul>
+                   </li>
+                   <li class="header">Bạn có {{ count($alert_items_3) }} phần mềm sắp hết hạn bản quyền</li>
+                   <li class="tmp_fix">
+                     <!-- inner menu: contains the actual data -->
+                     <ul class="menu">
+
+                      @for($i = 0; count($alert_items_3) > $i; $i++)
+
+                        <li><!-- Task item -->
+                          <a href="{{route($alert_items_3[$i]['type'].'.show', $alert_items_3[$i]['id'])}}">
+                            <h3>{{ $alert_items_3[$i]['name'] }}
+                              <small class="pull-right">
+                                {{ $alert_items_3[$i]['remaining'] }} ngày
+                              </small>
+                            </h3>
+                            <div class="progress xs">
+                              <div class="progress-bar progress-bar-yellow" style="width: {{ $alert_items_3[$i]['percent'] }}%" role="progressbar" aria-valuenow="{{ $alert_items_3[$i]['percent'] }}" aria-valuemin="0" aria-valuemax="100">
+                                <span class="sr-only">{{ $alert_items_3[$i]['percent'] }}% Complete</span>
                               </div>
                             </div>
                           </a>
@@ -856,7 +934,8 @@
                     _token: "{{ csrf_token() }}"
                 });
             });
-
+            $('.tmp_fix .slimScrollDiv').css("height", "auto");
+            $('.tmp_fix .slimScrollDiv .menu').css("height", "auto");
         });
 
         // Initiate the ekko lightbox

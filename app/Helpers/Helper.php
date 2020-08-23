@@ -21,7 +21,7 @@ use App\Models\Asset;
 use App\Models\Setting;
 use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
-
+use Auth;
 class Helper
 {
 
@@ -351,13 +351,88 @@ class Helper
 
         }
 
-
-
         return $items_array;
 
 
     }
-
+    public static function checkNotification($type,$user_id = NULL)
+    {
+        $items_array = array();
+        $all_count = 0;
+        
+        if( !$user_id){
+            $user_id=Auth::user()->id;
+        }
+        if($type==1){
+            //Hết hạn bảo hành
+            if(\App\Models\Setting::getSettings()->audit_warning_days_1_notification==1){
+                $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ) AS `date`,
+                    DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),a.purchase_date) AS qty,
+                    DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),CURRENT_DATE) AS remaining
+                FROM assets AS a WHERE a.user_id=$user_id AND a.purchase_date IS NOT NULL
+                    AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_1." DAY)
+                    AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) >= CURRENT_DATE
+                    AND (SELECT count(id) FROM log_send_mail WHERE type=1 AND data_id=a.id)=0";
+                $assets = DB::select(DB::raw($query));
+                foreach($assets AS $asset){
+                    $percent = $asset->qty ? number_format(((($asset->qty -$asset->remaining)/ $asset->qty) * 100), 0) : 0;
+                    $items_array[$all_count]['id'] = $asset->id;
+                    $items_array[$all_count]['name'] = $asset->name;
+                    $items_array[$all_count]['date'] = $asset->date;
+                    $items_array[$all_count]['type'] = 'hardware';
+                    $items_array[$all_count]['percent'] = $percent;
+                    $items_array[$all_count]['remaining'] = $asset->remaining;
+                    $items_array[$all_count]['min_amt']=100;
+                    $all_count++;
+                }
+            }
+        }elseif($type==2){
+            //Hết khấu hao
+            if(\App\Models\Setting::getSettings()->audit_warning_days_2_notification==1){
+                $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ) AS `date`,
+                    DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ),CURRENT_DATE) AS remaining
+                FROM assets AS a 
+                    LEFT JOIN models AS m ON a.model_id=m.id 
+                    LEFT JOIN depreciations AS d ON d.id=m.depreciation_id
+                WHERE d.months IS NOT NULL
+                AND DATE_ADD(a.purchase_date, INTERVAL d.months MONTH) <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_2." DAY)
+                    AND DATE_ADD(a.purchase_date, INTERVAL d.months MONTH) >= CURRENT_DATE
+                    AND (SELECT count(id) FROM log_send_mail WHERE type=2 AND data_id=a.id)=0";
+                $assets = DB::select(DB::raw($query));
+                foreach($assets AS $asset){
+                    $items_array[$all_count]['id'] = $asset->id;
+                    $items_array[$all_count]['name'] = $asset->name;
+                    $items_array[$all_count]['date'] = $asset->date;
+                    $items_array[$all_count]['type'] = 'hardware';
+                    $items_array[$all_count]['percent'] = 98;
+                    $items_array[$all_count]['remaining'] = $asset->remaining;
+                    $items_array[$all_count]['min_amt']=100;
+                    $all_count++;
+                }
+            }
+        }elseif($type==3){
+            //Hết hạn bản quyền
+            if(\App\Models\Setting::getSettings()->audit_warning_days_3_notification==1){
+                $query="SELECT l.id ,l.name, l.expiration_date AS `date`,
+                    DATEDIFF(l.expiration_date,CURRENT_DATE) AS remaining
+                FROM licenses AS l WHERE l.user_id=$user_id AND l.expiration_date IS NOT NULL
+                    AND l.expiration_date <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_3." DAY)
+                    AND (SELECT count(id) FROM log_send_mail WHERE type=3 AND data_id=l.id)=0";
+                $licenses = DB::select(DB::raw($query));
+                foreach($licenses AS $license){
+                    $items_array[$all_count]['id'] = $license->id;
+                    $items_array[$all_count]['name'] = $license->name;
+                    $items_array[$all_count]['date'] = $license->date;
+                    $items_array[$all_count]['type'] = 'licenses';
+                    $items_array[$all_count]['percent'] = 98;
+                    $items_array[$all_count]['remaining'] = $license->remaining;
+                    $items_array[$all_count]['min_amt']=100;
+                    $all_count++;
+                }
+            }
+        }
+        return $items_array;
+    }
 
     /**
      * Check if the file is an image, so we can show a preview
