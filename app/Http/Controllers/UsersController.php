@@ -36,7 +36,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use URL;
 use View;
-
+use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**
  * This controller handles all actions related to Users for
  * the Snipe-IT Asset Management application.
@@ -999,6 +1003,75 @@ class UsersController extends Controller
         $consumables = $show_user->consumables()->get();
         return view('users/print')->with('assets', $assets)->with('licenses',$licenses)->with('accessories', $accessories)->with('consumables', $consumables)->with('show_user', $show_user);
 
+    }
+
+    public function exportAssets($userId){
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setCellValue('A1', 'Full Name');
+            $sheet->setCellValue('B1', 'Email');
+            $sheet->setCellValue('C1', 'Username');
+            $sheet->setCellValue('D1', 'In asset');
+            $sheet->setCellValue('E1', 'Item Name');
+            $sheet->setCellValue('F1', 'Category');
+            $sheet->setCellValue('G1', 'Model name');
+            $sheet->setCellValue('H1', 'Manufacturer');
+            $sheet->setCellValue('I1', 'Model Number');
+            $sheet->setCellValue('J1', 'Serial number');
+            $sheet->setCellValue('K1', 'Asset Tag');
+            $sheet->setCellValue('L1', 'Location');
+            $sheet->setCellValue('M1', 'Notes');
+            $sheet->setCellValue('N1', 'Purchase Date');
+            $sheet->setCellValue('O1', 'Purchase Cost');
+            $sheet->setCellValue('P1', 'Company');
+            $sheet->setCellValue('Q1', 'Status');
+            $sheet->setCellValue('R1', 'Warranty Months');
+            $sheet->setCellValue('S1', 'Supplier');
+            $writer = new Xlsx($spreadsheet);
+            $query="SELECT CONCAT(u.first_name,' ',u.last_name) AS fullname,u.email, u.username, 
+                    a.name AS asset_name, m.name AS model_name,m.model_number,
+                    (SELECT name FROM categories WHERE id=m.category_id) AS category_name,
+                    (SELECT name FROM manufacturers WHERE id=m.manufacturer_id) AS manufacturer_name,
+                    a.serial, a.asset_tag, a.notes, a.purchase_date, a.purchase_cost, a.warranty_months,
+                    (SELECT name FROM locations WHERE id=a.location_id) AS location_name,
+                    (SELECT name FROM companies WHERE id=a.company_id) AS company_name,
+                    (SELECT name FROM status_labels WHERE id= a.status_id) AS status_label,
+                    (SELECT name FROM suppliers WHERE id = a.supplier_id) AS supplier_name
+                FROM assets AS a LEFT JOIN users AS u ON u.id = a.user_id 
+                LEFT JOIN models AS m ON m.id=a.model_id
+                WHERE a.user_id=$userId AND a.deleted_at IS NULL";
+            $assets = DB::select(DB::raw($query));
+            for ($i = 0; $i < count($assets); $i++) {
+                $x = $i + 2;
+                $sheet->setCellValue('A' . $x, $assets[$i]->fullname);
+                $sheet->setCellValue('B' . $x, $assets[$i]->email);
+                $sheet->setCellValue('C' . $x, $assets[$i]->username);
+                $sheet->setCellValue('D' . $x, '');
+                $sheet->setCellValue('E' . $x, $assets[$i]->asset_name);
+                $sheet->setCellValue('F' . $x, $assets[$i]->category_name);
+                $sheet->setCellValue('G' . $x, $assets[$i]->model_name);
+                $sheet->setCellValue('H' . $x, $assets[$i]->manufacturer_name);
+                $sheet->setCellValue('I' . $x, $assets[$i]->model_number);
+                $sheet->setCellValue('J' . $x, $assets[$i]->serial);
+                $sheet->setCellValue('K' . $x, $assets[$i]->asset_tag);
+                $sheet->setCellValue('L' . $x, $assets[$i]->location_name);
+                $sheet->setCellValue('M' . $x, $assets[$i]->notes);
+                $sheet->setCellValue('N' . $x, $assets[$i]->purchase_date);
+                $sheet->setCellValue('O' . $x, $assets[$i]->purchase_cost);
+                $sheet->setCellValue('P' . $x, $assets[$i]->company_name);
+                $sheet->setCellValue('Q' . $x, $assets[$i]->status_label);
+                $sheet->setCellValue('R' . $x, $assets[$i]->warranty_months);
+                $sheet->setCellValue('S' . $x, $assets[$i]->supplier_name);
+            }
+            try {
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="BÁO CÁO TẤT CẢ TÀI SẢN.xlsx"');
+                header('Cache-Control: max-age=0');
+                $writer->save("php://output");
+            } catch (Exception $exception) {
+                throw $exception;
+            }
+        exit;
     }
 
 }

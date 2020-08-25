@@ -49,7 +49,10 @@ Route::group([ 'prefix' => 'users', 'middleware' => ['auth']], function () {
         ]
     );
 
-
+    Route::get(
+        '{userId}/exportassets',
+        [ 'as' => 'users.exportassets', 'uses' => 'UsersController@exportAssets' ]
+    );
 });
 
 Route::resource('users', 'UsersController', [

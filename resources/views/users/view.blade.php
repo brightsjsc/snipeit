@@ -333,7 +333,9 @@
                   </div>
                 @endif
               @endcan
-
+              <div class="col-md-12" style="padding-top: 5px;">
+                <a href="{{ route('users.exportassets', $user->id) }}" style="width: 100%;color:#fff" class="btn btn-sm btn-success hidden-print" target="_blank" rel="noopener"> Xuất BC tất cả tài sản </a>
+              </div>
 
             </div>
             <!-- End button column -->
