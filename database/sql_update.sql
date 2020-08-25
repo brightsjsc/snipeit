@@ -32,12 +32,12 @@ CREATE TABLE `log_send_mail` (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-ALTER TABLE users ADD audit_warning_days_1_notification tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_1_email tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_1 int(11);
-ALTER TABLE users ADD audit_warning_days_2_notification tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_2_email tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_2 int(11);
-ALTER TABLE users ADD audit_warning_days_3_notification tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_3_email tinyint(2) DEFAULT 0;
-ALTER TABLE users ADD audit_warning_days_3 int(11);
+ALTER TABLE settings ADD audit_warning_days_1_notification tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_1_email tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_1 int(11);
+ALTER TABLE settings ADD audit_warning_days_2_notification tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_2_email tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_2 int(11);
+ALTER TABLE settings ADD audit_warning_days_3_notification tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_3_email tinyint(2) DEFAULT 0;
+ALTER TABLE settings ADD audit_warning_days_3 int(11);
