@@ -359,7 +359,6 @@ class Helper
     {
         $items_array = array();
         $all_count = 0;
-        
         if( !$user_id){
             $user_id=Auth::user()->id;
         }
@@ -367,10 +366,11 @@ class Helper
             //Hết hạn bảo hành
             if(\App\Models\Setting::getSettings()->audit_warning_days_1_notification==1){
                 $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=1 AND data_id=a.id)=0";
+                $cond.= Auth::user()->isSuperUser() ? "":" AND a.user_id=$user_id";
                 $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ) AS `date`,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),a.purchase_date) AS qty,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL a.warranty_months MONTH ),CURRENT_DATE) AS remaining
-                FROM assets AS a WHERE a.user_id=$user_id AND a.purchase_date IS NOT NULL
+                FROM assets AS a WHERE a.purchase_date IS NOT NULL
                     AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_1." DAY)
                     AND DATE_ADD(a.purchase_date, INTERVAL a.warranty_months MONTH) >= CURRENT_DATE
                     $cond ";
@@ -391,6 +391,7 @@ class Helper
             //Hết khấu hao
             if(\App\Models\Setting::getSettings()->audit_warning_days_2_notification==1){
                 $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=2 AND data_id=a.id)=0";
+                $cond.= Auth::user()->isSuperUser() ? "":" AND a.user_id=$user_id";
                 $query="SELECT a.id ,a.name, DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ) AS `date`,
                     DATEDIFF(DATE_ADD( a.purchase_date, INTERVAL d.months MONTH ),CURRENT_DATE) AS remaining
                 FROM assets AS a 
@@ -416,6 +417,7 @@ class Helper
             //Hết hạn bản quyền
             if(\App\Models\Setting::getSettings()->audit_warning_days_3_notification==1){
                 $cond = $notification ? "" :" AND (SELECT count(id) FROM log_send_mail WHERE type=3 AND data_id=l.id)=0";
+                $cond.= Auth::user()->isSuperUser() ? "":" AND l.user_id=$user_id";
                 $query="SELECT l.id ,l.name, l.expiration_date AS `date`,
                     DATEDIFF(l.expiration_date,CURRENT_DATE) AS remaining
                 FROM licenses AS l WHERE l.user_id=$user_id AND l.expiration_date IS NOT NULL
