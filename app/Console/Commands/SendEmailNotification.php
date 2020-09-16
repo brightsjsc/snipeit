@@ -64,7 +64,7 @@ class SendEmailNotification extends Command
                 if($result){
                     foreach($arr_item AS $item){
                         DB::table('log_send_mail')->insert(
-                            ['type' => 1, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s')]
+                            ['type' => 1, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s'),'user_id'=>$user->id]
                         );
                     }
                 }
@@ -88,7 +88,7 @@ class SendEmailNotification extends Command
                 if($result){
                     foreach($arr_item AS $item){
                         DB::table('log_send_mail')->insert(
-                            ['type' => 2, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s')]
+                            ['type' => 2, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s'),'user_id'=>$user->id]
                         );
                     }
                 }
@@ -112,7 +112,7 @@ class SendEmailNotification extends Command
                 if($result){
                     foreach($arr_item AS $item){
                         DB::table('log_send_mail')->insert(
-                            ['type' => 3, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s')]
+                            ['type' => 3, 'data_id' => $item['id'],'created_at'=>date('Y-m-d H:i:s'),'user_id'=>$user->id]
                         );
                     }
                 }
