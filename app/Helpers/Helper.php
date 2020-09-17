@@ -420,7 +420,7 @@ class Helper
                 $cond.= Auth::user()->isSuperUser() ? "":" AND l.user_id=$user_id";
                 $query="SELECT l.id ,l.name, l.expiration_date AS `date`,
                     DATEDIFF(l.expiration_date,CURRENT_DATE) AS remaining
-                FROM licenses AS l WHERE l.user_id=$user_id AND l.expiration_date IS NOT NULL
+                FROM licenses AS l WHERE l.expiration_date IS NOT NULL
                     AND l.expiration_date <= DATE_ADD(CURRENT_DATE, INTERVAL ".(int)\App\Models\Setting::getSettings()->audit_warning_days_3." DAY)
                     $cond ";
                 $licenses = DB::select(DB::raw($query));
