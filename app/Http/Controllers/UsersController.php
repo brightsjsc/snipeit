@@ -1037,11 +1037,9 @@ class UsersController extends Controller
                     (SELECT name FROM companies WHERE id=a.company_id) AS company_name,
                     (SELECT name FROM status_labels WHERE id= a.status_id) AS status_label,
                     (SELECT name FROM suppliers WHERE id = a.supplier_id) AS supplier_name
-                FROM assets AS a 
-                LEFT JOIN accessories_users AS au ON au.accessory_id = a.id
-                LEFT JOIN users AS u ON u.id = au.assigned_to 
+                FROM assets AS a LEFT JOIN users AS u ON u.id = a.user_id 
                 LEFT JOIN models AS m ON m.id=a.model_id
-                WHERE a.user_id=$userId AND a.deleted_at IS NULL";
+                WHERE a.assigned_to=$userId AND a.deleted_at IS NULL";
             $assets = DB::select(DB::raw($query));
             for ($i = 0; $i < count($assets); $i++) {
                 $x = $i + 2;
