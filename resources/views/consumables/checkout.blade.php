@@ -21,7 +21,7 @@
         @if ($consumable->id)
           <div class="box-header with-border">
             <div class="box-heading">
-              <h2 class="box-title">{{ $consumable->name }} </h2>
+              <h2 class="box-title"><?php foreach($consumables AS $k=>$con): echo $k>0?', '.$con->name:$con->name; endforeach;?></h2>
             </div>
           </div><!-- /.box-header -->
         @endif
@@ -32,7 +32,9 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">{{ trans('admin/consumables/general.consumable_name') }}</label>
             <div class="col-md-6">
-              <p class="form-control-static">{{ $consumable->name }}</p>
+              <p class="form-control-static">
+                <?php foreach($consumables AS $k=>$con): echo $k>0?', '.$con->name:$con->name; endforeach;?>
+              </p>
             </div>
           </div>
           @endif

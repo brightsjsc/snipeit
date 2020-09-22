@@ -52,6 +52,9 @@ class BulkAssetsController extends Controller
                 case 'audit':
                     $ids =implode(",",request('ids'));
                     return redirect('hardware/bulkaudit?ids='.$ids);
+                case 'assign':
+                    $ids =implode(",",request('ids'));
+                    return redirect('consumables/'.$ids.'/checkout');
             }
         }
         return redirect()->back()->with('error', 'No action selected');

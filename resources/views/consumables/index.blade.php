@@ -20,7 +20,20 @@
 
     <div class="box box-default">
       <div class="box-body">
+      {{ Form::open([
+          'method' => 'POST',
+          'route' => ['hardware/bulkedit'],
+          'class' => 'form-inline',
+           'id' => 'bulkForm']) }}
+        <div id="toolbar">
+          <label for="bulk_actions"><span class="sr-only">Bulk Actions</span></label>
+          <select name="bulk_actions" class="form-control select2" aria-label="bulk_actions" style="width:100px;">
+            <option value="assign">Bàn giao</option>
+          </select>
+          <button class="btn btn-primary" id="bulkEdit" disabled>Go</button>
+        </div>
         <table
+                data-click-to-select="true"
                 data-columns="{{ \App\Presenters\ConsumablePresenter::dataTableLayout() }}"
                 data-cookie-id-table="consumablesTable"
                 data-pagination="true"
@@ -42,7 +55,7 @@
                 "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
                 }'>
         </table>
-
+        {{ Form::close() }}
       </div><!-- /.box-body -->
     </div><!-- /.box -->
 

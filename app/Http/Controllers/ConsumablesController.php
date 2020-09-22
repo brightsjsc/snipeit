@@ -19,6 +19,7 @@ use View;
 use Gate;
 use Image;
 use App\Http\Requests\ImageUploadRequest;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 /**
  * This controller handles all actions related to Consumables for
@@ -218,11 +219,14 @@ class ConsumablesController extends Controller
      */
     public function getCheckout($consumableId)
     {
-        if (is_null($consumable = Consumable::find($consumableId))) {
+        $arr_con =explode(',',$consumableId);
+        if (is_null($consumable = Consumable::find($arr_con[0]))) {
             return redirect()->route('consumables.index')->with('error', trans('admin/consumables/message.does_not_exist'));
         }
         $this->authorize('checkout', $consumable);
-        return view('consumables/checkout', compact('consumable'));
+        $query ="SELECT * FROM consumables WHERE id IN ($consumableId)";
+        $consumables = FacadesDB::select(FacadesDB::raw($query));
+        return view('consumables/checkout', compact('consumable','consumables'));
     }
 
     /**
@@ -236,40 +240,41 @@ class ConsumablesController extends Controller
      */
     public function postCheckout($consumableId)
     {
-        if (is_null($consumable = Consumable::find($consumableId))) {
-            return redirect()->route('consumables.index')->with('error', trans('admin/consumables/message.not_found'));
+        $arr_con =explode(',',$consumableId);
+        foreach($arr_con AS $con){
+            if (is_null($consumable = Consumable::find($con))) {
+                return redirect()->route('consumables.index')->with('error', trans('admin/consumables/message.not_found'));
+            }
+    
+            $this->authorize('checkout', $consumable);
+    
+            $admin_user = Auth::user();
+            $assigned_to = e(Input::get('assigned_to'));
+    
+            // Check if the user exists
+            if (is_null($user = User::find($assigned_to))) {
+                // Redirect to the consumable management page with error
+                return redirect()->route('checkout/consumable', $consumable)->with('error', trans('admin/consumables/message.checkout.user_does_not_exist'));
+            }
+    
+            // Update the consumable data
+            $consumable->assigned_to = e(Input::get('assigned_to'));
+    
+            $consumable->users()->attach($consumable->id, [
+                'consumable_id' => $consumable->id,
+                'user_id' => $admin_user->id,
+                'assigned_to' => e(Input::get('assigned_to'))
+            ]);
+    
+            $logaction = $consumable->logCheckout(e(Input::get('note')), $user);
+            $data['log_id'] = $logaction->id;
+            $data['eula'] = $consumable->getEula();
+            $data['first_name'] = $user->first_name;
+            $data['item_name'] = $consumable->name;
+            $data['checkout_date'] = $logaction->created_at;
+            $data['note'] = $logaction->note;
+            $data['require_acceptance'] = $consumable->requireAcceptance();
         }
-
-        $this->authorize('checkout', $consumable);
-
-        $admin_user = Auth::user();
-        $assigned_to = e(Input::get('assigned_to'));
-
-        // Check if the user exists
-        if (is_null($user = User::find($assigned_to))) {
-            // Redirect to the consumable management page with error
-            return redirect()->route('checkout/consumable', $consumable)->with('error', trans('admin/consumables/message.checkout.user_does_not_exist'));
-        }
-
-        // Update the consumable data
-        $consumable->assigned_to = e(Input::get('assigned_to'));
-
-        $consumable->users()->attach($consumable->id, [
-            'consumable_id' => $consumable->id,
-            'user_id' => $admin_user->id,
-            'assigned_to' => e(Input::get('assigned_to'))
-        ]);
-
-        $logaction = $consumable->logCheckout(e(Input::get('note')), $user);
-        $data['log_id'] = $logaction->id;
-        $data['eula'] = $consumable->getEula();
-        $data['first_name'] = $user->first_name;
-        $data['item_name'] = $consumable->name;
-        $data['checkout_date'] = $logaction->created_at;
-        $data['note'] = $logaction->note;
-        $data['require_acceptance'] = $consumable->requireAcceptance();
-
-
       // Redirect to the new consumable page
         return redirect()->route('consumables.index')->with('success', trans('admin/consumables/message.checkout.success'));
 
