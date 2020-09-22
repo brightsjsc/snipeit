@@ -43,6 +43,10 @@ class CategoriesController extends Controller
 
         $total = $categories->count();
         $categories = $categories->skip($offset)->take($limit)->get();
+        $category_types= Helper::categoryTypeList();
+        foreach($categories AS $k=>$row){
+            $categories[$k]->category_type = $category_types[$categories[$k]->category_type];
+        }
         return (new CategoriesTransformer)->transformCategories($categories, $total);
 
     }

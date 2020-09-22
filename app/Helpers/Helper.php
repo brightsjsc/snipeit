@@ -194,11 +194,11 @@ class Helper
     {
         $category_types = array(
             '' => '',
-            'accessory' => 'Accessory',
-            'asset' => 'Asset',
-            'consumable' => 'Consumable',
-            'component' => 'Component',
-            'license' => 'License'
+            'accessory' => 'Phụ kiện',
+            'asset' => 'Tài sản',
+            'consumable' => 'Vật tư tiêu hao',
+            'component' => 'Các thành phần',
+            'license' => 'Phần mềm'
         );
         return $category_types;
     }
