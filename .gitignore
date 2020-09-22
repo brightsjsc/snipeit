@@ -1,3 +1,4 @@
 vendor/*
 qlts_v1.zip
 .env
+node_modules
