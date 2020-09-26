@@ -67,7 +67,6 @@ class User extends SnipeModel implements AuthenticatableContract, CanResetPasswo
         'first_name'              => 'required|string|min:1',
         'username'                => 'required|string|min:1|unique_undeleted',
         'email'                   => 'email|nullable',
-        'password'                => 'required|min:6',
         'locale'                  => 'max:10|nullable',
         'website'           => 'url|nullable',
     ];

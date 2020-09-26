@@ -112,8 +112,9 @@ class UsersController extends Controller
         $user->email = $data['email'] = e($request->input('email'));
         $user->username = $data['username'] = e($request->input('username'));
         if ($request->filled('password')) {
-            $user->password = bcrypt($request->input('password'));
-            $data['password'] =  $request->input('password');
+            $tmp_pass = $request->input('password') ? $request->input('password') :'123456';
+            $user->password = bcrypt( $tmp_pass);
+            $data['password'] =   $tmp_pass;
         }
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');

@@ -136,7 +136,7 @@
                   <label class="col-md-3 control-label" for="password">
                     {{ trans('admin/users/table.password') }}
                   </label>
-                  <div class="col-md-5{{  (\App\Helpers\Helper::checkIfRequired($user, 'password')) ? ' required' : '' }}">
+                  <div class="col-md-5{{  (\App\Helpers\Helper::checkIfRequired($user, 'password')) ? ' ' : '' }}">
                     @if ($user->ldap_import!='1')
                       <input
                         type="password"
@@ -167,7 +167,7 @@
                   <label class="col-md-3 control-label" for="password_confirmation">
                     {{ trans('admin/users/table.password_confirm') }}
                   </label>
-                  <div class="col-md-5 {{  ((\App\Helpers\Helper::checkIfRequired($user, 'first_name')) && (!$user->id)) ? ' required' : '' }}">
+                  <div class="col-md-5 {{  ((\App\Helpers\Helper::checkIfRequired($user, 'first_name')) && (!$user->id)) ? ' ' : '' }}">
                     <input
                     type="password"
                     name="password_confirmation"
