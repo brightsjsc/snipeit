@@ -1009,25 +1009,25 @@ class UsersController extends Controller
     public function exportAssets($userId){
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
-            $sheet->setCellValue('A1', 'Full Name');
+            $sheet->setCellValue('A1', 'Họ và Tên');
             $sheet->setCellValue('B1', 'Email');
-            $sheet->setCellValue('C1', 'Username');
-            $sheet->setCellValue('D1', 'In asset');
-            $sheet->setCellValue('E1', 'Item Name');
-            $sheet->setCellValue('F1', 'Category');
-            $sheet->setCellValue('G1', 'Model name');
-            $sheet->setCellValue('H1', 'Manufacturer');
-            $sheet->setCellValue('I1', 'Model Number');
-            $sheet->setCellValue('J1', 'Serial number');
-            $sheet->setCellValue('K1', 'Asset Tag');
-            $sheet->setCellValue('L1', 'Location');
-            $sheet->setCellValue('M1', 'Notes');
-            $sheet->setCellValue('N1', 'Purchase Date');
-            $sheet->setCellValue('O1', 'Purchase Cost');
-            $sheet->setCellValue('P1', 'Company');
-            $sheet->setCellValue('Q1', 'Status');
-            $sheet->setCellValue('R1', 'Warranty Months');
-            $sheet->setCellValue('S1', 'Supplier');
+            $sheet->setCellValue('C1', 'Tên đăng nhập');
+            $sheet->setCellValue('D1', 'Tài sản cha');
+            $sheet->setCellValue('E1', 'Tên tài sản');
+            $sheet->setCellValue('F1', 'Mã tài sản');
+            $sheet->setCellValue('G1', 'Trạng thái');
+            $sheet->setCellValue('H1', 'Nhóm tài sản');
+            $sheet->setCellValue('I1', 'Kiểu tài sản');
+            $sheet->setCellValue('J1', 'Nhà sản xuất');
+            $sheet->setCellValue('K1', 'Nhà cung cấp');
+            $sheet->setCellValue('L1', 'Mã Model');
+            $sheet->setCellValue('M1', 'Mã Serial');
+            $sheet->setCellValue('N1', 'Bảo hành');
+            $sheet->setCellValue('O1', 'Ghi chú');
+            $sheet->setCellValue('P1', 'Vị trí');
+            $sheet->setCellValue('Q1', 'Ngày mua');
+            $sheet->setCellValue('R1', 'Giá mua');
+            $sheet->setCellValue('S1', 'Công ty');
             $writer = new Xlsx($spreadsheet);
             $query="SELECT CONCAT(u.first_name,' ',u.last_name) AS fullname,u.email, u.username, 
                     a.name AS asset_name, m.name AS model_name,m.model_number,
@@ -1049,20 +1049,20 @@ class UsersController extends Controller
                 $sheet->setCellValue('C' . $x, $assets[$i]->username);
                 $sheet->setCellValue('D' . $x, '');
                 $sheet->setCellValue('E' . $x, $assets[$i]->asset_name);
-                $sheet->setCellValue('F' . $x, $assets[$i]->category_name);
-                $sheet->setCellValue('G' . $x, $assets[$i]->model_name);
-                $sheet->setCellValue('H' . $x, $assets[$i]->manufacturer_name);
-                $sheet->setCellValue('I' . $x, $assets[$i]->model_number);
-                $sheet->setCellValue('J' . $x, $assets[$i]->serial);
-                $sheet->setCellValue('K' . $x, $assets[$i]->asset_tag);
-                $sheet->setCellValue('L' . $x, $assets[$i]->location_name);
-                $sheet->setCellValue('M' . $x, $assets[$i]->notes);
-                $sheet->setCellValue('N' . $x, $assets[$i]->purchase_date);
-                $sheet->setCellValue('O' . $x, $assets[$i]->purchase_cost);
-                $sheet->setCellValue('P' . $x, $assets[$i]->company_name);
-                $sheet->setCellValue('Q' . $x, $assets[$i]->status_label);
-                $sheet->setCellValue('R' . $x, $assets[$i]->warranty_months);
-                $sheet->setCellValue('S' . $x, $assets[$i]->supplier_name);
+                $sheet->setCellValue('F' . $x, $assets[$i]->asset_tag);
+                $sheet->setCellValue('G' . $x, $assets[$i]->status_label);
+                $sheet->setCellValue('H' . $x, $assets[$i]->category_name);
+                $sheet->setCellValue('I' . $x, $assets[$i]->model_name);
+                $sheet->setCellValue('J' . $x, $assets[$i]->manufacturer_name);
+                $sheet->setCellValue('K' . $x, $assets[$i]->supplier_name );
+                $sheet->setCellValue('L' . $x, $assets[$i]->model_number);
+                $sheet->setCellValue('M' . $x, $assets[$i]->serial);
+                $sheet->setCellValue('N' . $x, $assets[$i]->warranty_months);
+                $sheet->setCellValue('O' . $x, $assets[$i]->notes);
+                $sheet->setCellValue('P' . $x, $assets[$i]->location_name);
+                $sheet->setCellValue('Q' . $x, $assets[$i]->purchase_date);
+                $sheet->setCellValue('R' . $x, $assets[$i]->purchase_cost);
+                $sheet->setCellValue('S' . $x, $assets[$i]->company_name);
             }
             try {
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
