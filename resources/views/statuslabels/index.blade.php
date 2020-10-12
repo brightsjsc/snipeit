@@ -109,25 +109,29 @@
       function statusLabelTypeFormatter (row, value) {
           switch (value.type) {
               case 'deployed':
+                  text_name = 'Không cho phép cấp phát'
                   text_color = 'blue';
                   icon_style = 'fa-circle';
                   break;
               case 'deployable':
+                  text_name = 'Cho phép cấp phát'
                   text_color = 'green';
                   icon_style = 'fa-circle';
                   break;
               case 'pending':
+                  text_name = 'Đã xử lý'
                   text_color = 'orange';
                   icon_style = 'fa-circle';
                   break;
               default:
+                  text_name = 'Đã lưu trữ'
                   text_color = 'red';
                   icon_style = 'fa-times';
           }
 
           var typename_lower = value.type;
           var typename = typename_lower.charAt(0).toUpperCase() + typename_lower.slice(1);
-          return '<i class="fa ' + icon_style + ' text-' + text_color + '"></i> ' + typename;
+          return '<i class="fa ' + icon_style + ' text-' + text_color + '"></i> ' + text_name;
 
 
       }

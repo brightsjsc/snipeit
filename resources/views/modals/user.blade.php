@@ -46,15 +46,32 @@
 
                     <div class="dynamic-form-row">
                         <div class="col-md-4 col-xs-12"><label for="modal-password">{{ trans('admin/users/table.password') }}:</label></div>
-                        <div class="col-md-8 col-xs-12 required"><input type='password' name="password" id='modal-password' class="form-control">
+                        <div class="col-md-8 col-xs-12"><input type='password' name="password" id='modal-password' class="form-control">
                             <a href="#" class="left" id="genPassword">Generate</a>
                         </div>
                     </div>
 
                     <div class="dynamic-form-row">
                         <div class="col-md-4 col-xs-12"><label for="modal-password_confirmation">{{ trans('admin/users/table.password_confirm') }}:</label></div>
-                        <div class="col-md-8 col-xs-12 required"><input type='password' name="password_confirmation" id='modal-password_confirmation' class="form-control">
+                        <div class="col-md-8 col-xs-12"><input type='password' name="password_confirmation" id='modal-password_confirmation' class="form-control">
                             <div id="generated-password"></div>
+                        </div>
+                    </div>
+                    <div class="dynamic-form-row">
+                    @include ('partials.forms.edit.department-select', ['translated_name' => trans('general.department'), 'fieldname' => 'department_id'])
+                    </div>
+                    <div class="dynamic-form-row">
+                        <label class="col-md-3 control-label" for="employee_num">{{ trans('admin/users/table.employee_num') }}</label>
+                        <div class="col-md-8">
+                            <input
+                            class="form-control"
+                            type="text"
+                            aria-label="employee_num"
+                            name="employee_num"
+                            id="employee_num"
+                            value="{{ Input::old('employee_num', $user->employee_num) }}"
+                            />
+                            {!! $errors->first('employee_num', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                         </div>
                     </div>
                 </form>
