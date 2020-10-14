@@ -18,7 +18,8 @@
     <label for="asset_tag" class="col-md-3 control-label">{{ trans('admin/hardware/form.tag') }}</label>
     <div class="col-md-7 col-sm-12{{  (\App\Helpers\Helper::checkIfRequired($item, 'asset_tag')) ? ' required' : '' }}">
       @if  ($item->id)
-      <input class="form-control" disabled type="text" name="asset_tag" aria-label="asset_tag" id="asset_tag" value="{{ Input::old('asset_tag', $item->asset_tag) }}" />
+      <input class="form-control" disabled type="text" aria-label="asset_tag" value="{{ Input::old('asset_tag', $item->asset_tag) }}" />
+      <input class="form-control" type="hidden" name="asset_tag" aria-label="asset_tag" id="asset_tag" value="{{ Input::old('asset_tag', $item->asset_tag) }}" />
       @else
       <input class="form-control" type="text" name="asset_tag" aria-label="asset_tag" id="asset_tag" value="{{ Input::old('asset_tag', \App\Models\Asset::autoincrement_asset()) }}">
       @endif
