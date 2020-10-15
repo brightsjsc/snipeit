@@ -474,14 +474,16 @@
               <thead>
                 <tr>
                   <th class="col-md-8">{{ trans('general.name') }}</th>
-                  <th class="col-md-4">{{ trans('general.date') }}</th>
+                  <th class="col-md-4">Số lượng</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($user->consumables as $consumable)
+                @foreach ($consumables as $consumable)
                 <tr>
-                  <td>{!! $consumable->present()->nameUrl() !!}</a></td>
-                  <td>{{ $consumable->created_at }}</td>
+                  <td>
+                    <a href="{{ route('show/consumable', array('consumableId'=> $consumable->id)) }}" >{{ $consumable->name }}</a>
+                  </td>
+                  <td>{{ $consumable->count }}</td>
                 </tr>
                 @endforeach
               </tbody>

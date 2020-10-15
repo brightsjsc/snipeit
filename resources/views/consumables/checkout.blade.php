@@ -76,6 +76,13 @@
               {!! $errors->first('note', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
             </div>
           </div>
+          <div class="form-group">
+            <label for="assigned_qty" class="col-md-3 control-label">{{ trans('general.qty') }}
+              <i class='icon-asterisk'></i></label>
+            <div class="col-md-9">
+              <input class="form-control" type="number" name="assigned_qty" id="assigned_qty" style="width: 70px;" value="{{ Input::old('assigned_qty') }}" />
+            </div>
+          </div>
         </div> <!-- .box-body -->
         <div class="box-footer">
           <a class="btn btn-link" href="{{ URL::previous() }}">{{ trans('button.cancel') }}</a>

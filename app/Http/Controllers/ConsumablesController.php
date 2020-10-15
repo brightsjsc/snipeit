@@ -256,15 +256,24 @@ class ConsumablesController extends Controller
                 // Redirect to the consumable management page with error
                 return redirect()->route('checkout/consumable', $consumable)->with('error', trans('admin/consumables/message.checkout.user_does_not_exist'));
             }
-    
+            $query="SELECT COUNT(id) AS total FROM consumables_users WHERE consumable_id=$consumable->id";
+            $consumable_assign = DB::select(DB::raw($query));
+            $consumable_assign = $consumable_assign[0];
+            $consumable_count = $consumable->qty - $consumable_assign->total > 0 ? $consumable->qty - $consumable_assign->total : 0;
+            $assigned_qty = (int)Input::get('assigned_qty');
+            if($assigned_qty<1 || $assigned_qty>$consumable_count){
+                return redirect()->route('checkout/consumable', $consumable)->with('error', 'Số lượng bàn giao phải nằm giữa 1 - '.$consumable_count);
+            }
+
             // Update the consumable data
             $consumable->assigned_to = e(Input::get('assigned_to'));
-    
-            $consumable->users()->attach($consumable->id, [
-                'consumable_id' => $consumable->id,
-                'user_id' => $admin_user->id,
-                'assigned_to' => e(Input::get('assigned_to'))
-            ]);
+            for($i=0;$i<$assigned_qty;$i++){
+                $consumable->users()->attach($consumable->id, [
+                    'consumable_id' => $consumable->id,
+                    'user_id' => $admin_user->id,
+                    'assigned_to' => e(Input::get('assigned_to'))
+                ]);
+            }
     
             $logaction = $consumable->logCheckout(e(Input::get('note')), $user);
             $data['log_id'] = $logaction->id;

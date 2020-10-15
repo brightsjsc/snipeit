@@ -623,9 +623,13 @@ class UsersController extends Controller
         $query="SELECT * FROM components WHERE user_id=$userId AND deleted_at IS NULL";
         $components = DB::select(DB::raw($query));
 
+        $query="SELECT c.id, c.name, (SELECT count(id) FROM consumables_users WHERE assigned_to=$userId AND consumable_id = c.id) AS count 
+            FROM  consumables AS c WHERE (SELECT count(id) FROM consumables_users WHERE assigned_to=$userId AND consumable_id = c.id) >0 ";
+        $consumables = DB::select(DB::raw($query));
+
         if (isset($user->id)) {
             $this->authorize('view', $user);
-            return view('users/view', compact('user', 'userlog','components'));
+            return view('users/view', compact('user', 'userlog','components','consumables'));
         }
     }
 

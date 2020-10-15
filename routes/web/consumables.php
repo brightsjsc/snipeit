@@ -11,6 +11,10 @@
             '{consumableID}/checkout',
             [ 'as' => 'checkout/consumable', 'uses' => 'ConsumablesController@postCheckout' ]
         );
+        Route::get(
+            '{consumableId}',
+            [ 'as' => 'show/consumable','uses' => 'ConsumablesController@show' ]
+        );
     });
 
     Route::resource('consumables', 'ConsumablesController', [

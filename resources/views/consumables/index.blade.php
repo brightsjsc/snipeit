@@ -20,7 +20,7 @@
 
     <div class="box box-default">
       <div class="box-body">
-      {{ Form::open([
+      <!-- {{ Form::open([
           'method' => 'POST',
           'route' => ['hardware/bulkedit'],
           'class' => 'form-inline',
@@ -31,7 +31,7 @@
             <option value="assign">Bàn giao</option>
           </select>
           <button class="btn btn-primary" id="bulkEdit" disabled>Go</button>
-        </div>
+        </div> -->
         <table
                 data-click-to-select="true"
                 data-columns="{{ \App\Presenters\ConsumablePresenter::dataTableLayout() }}"
@@ -55,7 +55,7 @@
                 "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
                 }'>
         </table>
-        {{ Form::close() }}
+        <!-- {{ Form::close() }} -->
       </div><!-- /.box-body -->
     </div><!-- /.box -->
 
